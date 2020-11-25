@@ -13,3 +13,7 @@
 2007-12-04
 * small fix with SSL support for IMAP related to bugfix in Mail::IMAPClient 3.00 over 2.2.9 thanks to Seth P. Low <low@modog.com>
 * added --usage option to all three plugins for familiarity with the official nagios plugins
+2017-11-03
+* Author: jtlatuvm from nagios plugin page (comment)
+* check_smtp_send depends on Net::SMTP::TLS which is no longer maintained and breaks with new IO::Socket::SSL. That's when you'll see: invalid SSL_version specified
+* The fix is to change check_smtp_send to use Net::SMTP which now directly supports STARTTLS.

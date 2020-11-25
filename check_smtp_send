@@ -85,7 +85,6 @@ if( $smtp_server eq "" && scalar(@mailto) == 1 ) {
 my @required_module = ();
 push @required_module, 'Net::SMTP::SSL' if $ssl;
 push @required_module, ('MIME::Base64','Authen::SASL') if $ssl && $username;
-push @required_module, 'Net::SMTP::TLS' if $tls;
 push @required_module, 'Net::SMTP_auth' if $auth_method and not $tls; # whereas if auth_method and tls we use TLS_auth, which is included in this script!
 push @required_module, 'Text::Template' if $template;
 push @required_module, 'Net::DNS' if $mx_lookup;
@@ -141,7 +140,7 @@ if( $mx_lookup ) {
 }
 
 # connect to SMTP server
-# create the smtp handle using Net::SMTP, Net::SMTP::SSL, Net::SMTP::TLS, or an authentication variant
+# create the smtp handle using Net::SMTP, Net::SMTP::SSL, or an authentication variant
 my $smtp; 
 eval {
 	if( $tls and $auth_method ) {
@@ -154,7 +153,7 @@ eval {
 	}
 	elsif( $tls ) {
 		$smtp_port = $default_smtp_tls_port unless $smtp_port;
-		$smtp = Net::SMTP::TLS->new($smtp_server, Timeout=>$timeout, Port=>$smtp_port, User=>$username, Password=>$password);
+		$smtp = Net::SMTP->new($smtp_server, Timeout=>$timeout, Port=>$smtp_port, User=>$username, Password=>$password, starttls=>1);
 		if( $smtp ) {
 			my $message = oneline($smtp->message());
 			die "cannot connect with TLS: $message" if $smtp->code() =~ m/53\d/;
