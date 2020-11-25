@@ -17,3 +17,6 @@
 * Author: jtlatuvm from nagios plugin page (comment)
 * check_smtp_send depends on Net::SMTP::TLS which is no longer maintained and breaks with new IO::Socket::SSL. That's when you'll see: invalid SSL_version specified
 * The fix is to change check_smtp_send to use Net::SMTP which now directly supports STARTTLS.
+2020-11-25
+* Author: cnaslain
+* Add an option for Self-signed certificates: Use --ssl_verify_mode SSL_VERIFY_NONE

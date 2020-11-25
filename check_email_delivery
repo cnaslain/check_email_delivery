@@ -35,6 +35,7 @@ my $imap_mailbox = "";
 my $username = "";
 my $password = "";
 my $ssl = "";
+my $ssl_verify_mode = 1;
 my $imap_ssl = "";
 my $mailto = "";
 my $mailfrom = "";
@@ -91,6 +92,7 @@ $ok = Getopt::Long::GetOptions(
 	"imap-mailbox=s"=>\$imap_mailbox,
 	"imap-check-interval=i"=>\$imap_interval,"imap-retries=i"=>\$imap_retries,
 	"imapssl!"=>\$imap_ssl,
+	"ssl_verify_mode!"=>\$ssl_verify_mode,
 	# Time
 	"hires"=>\$time_hires,
 	);
@@ -199,6 +201,7 @@ $imap_options .= "-U ".shellquote($imap_username)." " if defined $imap_username 
 $imap_options .= "-P ".shellquote($imap_password)." " if defined $imap_password and $imap_password ne "";
 $imap_options .= "--mailbox ".shellquote($imap_mailbox)." " if defined $imap_mailbox and $imap_mailbox ne "";
 $imap_options .= "--ssl " if defined $imap_ssl and $imap_ssl;
+$imap_options .= "--ssl_verify_mode ".$ssl_verify_mode." " if defined $ssl_verify_mode ne "";
 
 
 # create the report object

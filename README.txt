@@ -5,9 +5,11 @@ http://nagiosplug.sourceforge.net/developer-guidelines.html
 
 Nagios Plugins:
 http://nagiosplugins.org/
-Nagios: http://nagios.org and http://nagiosplug.sourceforge.net
 
-Perl library:http://search.cpan.org/dist/Nagios-Plugin/lib/Nagios/Plugin.pm
+Nagios: http://nagios.org and http://nagiosplug.sourceforge.net
+
+Perl library:
+http://search.cpan.org/dist/Nagios-Plugin/lib/Nagios/Plugin.pm
 
 The email delivery plugin I wrote uses two other plugins
 (smtp send and imap receive), also included, to send a message
@@ -75,3 +77,31 @@ check_mail.pl by bledi51
 check_email_loop.pl by ryanwilliams
 check_pop.pl and check_imap.pl by http://www.jhweiss.de/software/nagios.html
 
+
+
+Command examples:
+
+- Install the required perl mail client
+
+apt-get update
+apt-get install libmail-imapclient-perl
+
+- Get the scripts from Git and set perms
+
+cd /opt/nagios/libexec
+wget https://raw.githubusercontent.com/cnaslain/check_email_delivery/master/check_email_delivery
+wget https://raw.githubusercontent.com/cnaslain/check_email_delivery/master/check_imap_quota
+wget https://raw.githubusercontent.com/cnaslain/check_email_delivery/master/check_imap_receive
+wget https://raw.githubusercontent.com/cnaslain/check_email_delivery/master/check_smtp_send
+wget https://raw.githubusercontent.com/cnaslain/check_email_delivery/master/imap_ssl_cert
+
+chown nagios:nagios check_email_delivery check_imap_quota check_imap_receive check_smtp_send imap_ssl_cert
+chmod o+x check_email_delivery check_imap_quota check_imap_receive check_smtp_send imap_ssl_cert
+
+- Send mail using TLS:
+
+./check_smtp_send -H 10.10.10.10 --mailfrom nagios@test.com --mailto nagios@test.com -U nagios@test.com -P ***** --header 'Subject:Nagios %TOKEN1%' --tls -w 5 -c 120
+
+- Check delivery using SSL/TLS
+
+./check_email_delivery -H 10.10.10.10 --mailfrom nagios@test.com --mailto nagios@test.com --username nagios@test.com --password ***** --libexec /opt/nagios/libexec/ --ssl --ssl_verify_mode 'SSL_VERIFY_NONE' -w 5 -c 120
